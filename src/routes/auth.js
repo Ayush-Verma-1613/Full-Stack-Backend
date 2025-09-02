@@ -80,13 +80,15 @@ authRouter.post('/signup', async (req, res) => {
 });
 
 authRouter.post('/logout', async (req, res) => {
-    res.cookie('token', null, {
-        httpOnly: true,
-        expires: new Date(Date.now()), // clears cookie
-    });
-    res.send("Logout Successfully")
+  res.cookie("token", null, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",   // match login
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    expires: new Date(0),  // expiry set to past date
+  });
+  res.send("Logout Successfully");
 });
- 
+
 
 
 module.exports = authRouter;
